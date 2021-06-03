@@ -17,7 +17,6 @@
 #' my_knn_cv(rand_data,rand_data_cl,k_nn = 5,k_cv = 10)
 #'
 #' @import class
-#' @import tidyverse
 #' @importFrom class knn
 #'
 #' @return Type list with a \code{cv_err} object and the predicted classification \code{class} output.
@@ -43,14 +42,14 @@ my_knn_cv <- function(train,cl,k_nn,k_cv) {
   # Iterate through the Ks.
   for (i in 1:k_cv) {
     # Create trainind and test data.
-    data_train = data %>% filter(fold != i) %>%
+    data_train = data %>% dplyr:: filter(fold != i) %>%
       select(-fold)
-    data_test = data %>% filter(fold == i) %>%
+    data_test = data %>% dplyr ::filter(fold == i) %>%
       select(-fold)
-    cl = data_w_cl %>% filter(fold != i) %>%
+    cl = data_w_cl %>% dplyr ::filter(fold != i) %>%
       select(-fold)
     # Create a prediction vector.
-    cl_predict = data_w_cl %>% filter(fold == i) %>%
+    cl_predict = data_w_cl %>% dplyr:: filter(fold == i) %>%
       select(-fold)
     # Run KNN.
     # Coerce type to work in the KNN function.

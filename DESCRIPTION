@@ -8,6 +8,7 @@ Authors@R:
            email = "theloniouslgoerz@gmail.com")
 Description: This package is created for STAT 302, a computing class at UW.
 Depends: tidyverse, class, palmerpenguins, randomForest, gapminder
+Imports: dplyr
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
