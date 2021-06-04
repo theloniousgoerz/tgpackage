@@ -42,14 +42,14 @@ my_knn_cv <- function(train,cl,k_nn,k_cv) {
   # Iterate through the Ks.
   for (i in 1:k_cv) {
     # Create trainind and test data.
-    data_train = data %>% dplyr:: filter(fold != i) %>%
+    data_train = data %>% dplyr::filter(fold != i) %>%
       select(-fold)
-    data_test = data %>% dplyr ::filter(fold == i) %>%
+    data_test = data %>% dplyr::filter(fold == i) %>%
       select(-fold)
-    cl = data_w_cl %>% dplyr ::filter(fold != i) %>%
+    cl = data_w_cl %>% dplyr::filter(fold != i) %>%
       select(-fold)
     # Create a prediction vector.
-    cl_predict = data_w_cl %>% dplyr:: filter(fold == i) %>%
+    cl_predict = data_w_cl %>% dplyr::filter(fold == i) %>%
       select(-fold)
     # Run KNN.
     # Coerce type to work in the KNN function.

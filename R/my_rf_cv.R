@@ -41,7 +41,7 @@ my_rf_cv <- function(k) {
       # Rm fold from computation.
       select(-fold)
     # Filter test data to i.
-    data_test = data %>% filter(fold == i)
+    data_test = data %>% dplyr::filter(fold == i)
     # Define the y outcome to calculate against
     data_test_y = data_test$body_mass_g
     # Remove fold from data test.
@@ -68,3 +68,4 @@ my_rf_cv <- function(k) {
   return(cv_err)
   # Returns the numeric CV error.
 }
+utils::globalVariables(c("bill_depth_mm","bill_length_mm","body_mass_g"))
