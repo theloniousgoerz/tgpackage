@@ -32,7 +32,7 @@ my_knn_cv <- function(train,cl,k_nn,k_cv) {
   data_w_cl = cbind(fold,cl)
   # Create full data for eventual KNN calc.
   # Clone CL.
-  cl_full <- as_vector(cl)
+  cl_full <- purr::as_vector(cl)
   # Clone train.
   train_full <- train
   # Create a list object for later values.
@@ -53,8 +53,8 @@ my_knn_cv <- function(train,cl,k_nn,k_cv) {
       select(-fold)
     # Run KNN.
     # Coerce type to work in the KNN function.
-    cl = as_vector(cl)
-    cl_predict = as_vector(cl_predict)
+    cl = purr::as_vector(cl)
+    cl_predict = purr::as_vector(cl_predict)
     knn_iter <-  knn(data_train,
                      data_test,
                      cl = cl,
