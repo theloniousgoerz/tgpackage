@@ -7,7 +7,7 @@
 [![codecov](https://codecov.io/gh/theloniousgoerz/tgpackage/branch/master/graph/badge.svg?token=2EYXZU3UBS)](https://codecov.io/gh/theloniousgoerz/tgpackage)
 <!-- badges: end -->
 
-The goal of tgpackage is to collect a set of functions for my STAT 302 class for the final projext.
+This package is for my final project for STAT 302.
 
 ## Installation
 

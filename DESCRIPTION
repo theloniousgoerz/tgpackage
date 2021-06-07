@@ -7,7 +7,13 @@ Authors@R:
            role = c("aut", "cre"),
            email = "theloniouslgoerz@gmail.com")
 Description: This package is created for STAT 302, a computing class at UW.
-Depends: tidyverse, class, palmerpenguins, randomForest, gapminder
+Depends: 
+    tidyverse,
+    class,
+    palmerpenguins,
+    randomForest,
+    gapminder,
+    R (>= 2.10)
 Imports: 
     magrittr,
     dplyr
@@ -19,4 +25,3 @@ RoxygenNote: 7.1.1
 Suggests: covr,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-
