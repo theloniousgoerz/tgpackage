@@ -66,6 +66,6 @@ my_rf_cv <- function(k) {
   cv_err = mean(unlist(mse_list))
   # Return Cross validation error.
   return(cv_err)
-  # Returns the numeric CV error.
+  # Returns the CV error which is type double.
 }
 utils::globalVariables(c("bill_depth_mm","bill_length_mm","body_mass_g"))
