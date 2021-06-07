@@ -9,18 +9,10 @@ The goal of tgpackage is to collect a set of functions for my STAT 302 class for
 
 ## Installation
 
-You can install the released version of tgpackage from [CRAN](https://CRAN.R-project.org) with:
+You can install the package through Github using:
 
 ``` r
-install.packages("tgpackage")
+devtools::install_github("theloniousgoerz/tgpackage")
 ```
 
-## Example
-
-This is a basic example which shows you how to solve a common problem:
-
-``` r
-library(tgpackage)
-## basic example code
-```
 
