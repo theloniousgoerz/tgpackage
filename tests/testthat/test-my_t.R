@@ -8,6 +8,8 @@ test_that("My_t.test works as intended", {
 }
 )
 
-test_that( "Non-character to alternative returns an error", {
+test_that( "Non-specificed argument to alternative returns an error", {
   expect_error(my_t.test(x = rep(1:5, length.out = 100), alternative = 4,mu = 5))
-})
+  expect_error(my_t.test(x = rep(1:5, length.out = 100), alternative = "more than", mu = 5))
+}
+)
