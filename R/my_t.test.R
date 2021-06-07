@@ -65,7 +65,7 @@ my_t.test <- function(x,alternative,mu) {
   # Returns a list
   # Alternative hypothesis call
 
-  return(list(Hypoethesis = alternative,
+  return(list(Hypothesis = alternative,
               # Test statistic calculated
               "T-Statistic" = paste("The t-statistic is:",
                                     # Test stat with a separation
