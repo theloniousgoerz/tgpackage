@@ -1,3 +1,4 @@
 ^tgpackage\.Rproj$
 ^\.Rproj\.user$
 ^\.github$
+^\.codecov.yaml$
