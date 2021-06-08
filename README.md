@@ -22,6 +22,9 @@ devtools::install_github("theloniousgoerz/tgpackage")
 The vignette for this package can be viewed by typing the following code into the console:
 
 ``` r
+# Use this to view the vignette.
 help(package = "tgpackage", help_type = "html")
+# Use this to view the vignette as an isolated HTML file
+utils::browseVignettes(package = "tgpackage")
 
 ```

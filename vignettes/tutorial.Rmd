@@ -1,13 +1,12 @@
 ---
 title: "Project 3: tgpackage Tutorial"
-author: Thelonious Goerz
+author: "Thelonious Goerz"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{tgpackage Tutorial}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-
 # Vignette Information 
 
 This vignette accompanies the `tgpackage` and provides necessary information and documentation to use this package. This package is hosted on my githib "Theloniousgoerz" and can be downloaded using the devtools package. 
@@ -17,7 +16,6 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-options(rmarkdown.html_vignette.check_title = FALSE) 
 ```
 
 ```{r, eval = F}
@@ -306,4 +304,3 @@ tibble(K = c(2,5,10),
 ```
 
 This plot summarizes the mean and standard deviations of each 30 simulations with different numbers of folds in the random forest cross validation. In this case, it is clear that as the number of Ks increases the mean and standard deviation decreases and then increaes. Overall, the optimal cross validation number of folds is 5, because it has the lowest CV mean and the lowest CV SD. I think that the optimal k is 5 beause, if one adds more folds, then the testing set begins to get much smaller, so there is a lot less data to predict on. This results in more error overall -- so finding a balance between folds and number of trees is key. 
-
