@@ -17,4 +17,11 @@ You can install the package through Github using:
 devtools::install_github("theloniousgoerz/tgpackage")
 ```
 
+## Help 
 
+The vignette for this package can be viewed by typing the following code into the console:
+
+```{r}
+help(package = "tgpackage", help_type = "html")
+
+```

@@ -1,0 +1,315 @@
+---
+title: "Project 3: tgpackage Tutorial"
+author: Thelonious Goerz
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{tgpackage Tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Vignette Information 
+
+This vignette accompanies the `tgpackage` and provides necessary information and documentation to use this package. This package is hosted on my githib "Theloniousgoerz" and can be downloaded using the devtools package. 
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+options(rmarkdown.html_vignette.check_title = FALSE) 
+```
+
+```{r, eval = F}
+# Install. 
+devtools::install_github("theloniousgoerz/tgpackage")
+```
+
+```{r setup}
+library(tgpackage)
+library(dplyr)
+library(class)
+library(kableExtra)
+library(palmerpenguins)
+library(randomForest)
+library(ggplot2)
+library(ggpubr)
+options(scipen = 500)
+```
+
+# Tutorial for my_t.test
+
+The first of the four main functions in this package is a function to compute a t-test in R. In this section I demonstrate how to use `my_t.test`. This function mimics the function  in base R. 
+
+## Two Sided 
+
+First, I demonstrate a hypothesis test using the gapminder data on "lifeExp" that the mean of life expectancy in the data is not 60 years. 
+
+The test is formally: 
+
+$$ 
+\begin{align}
+& H_o:\mu = 60 \\
+& H_a: \mu \neq 60
+\end{align}
+$$
+
+```{r}
+# Call gapminder data. 
+data("my_gapminder")
+
+# Run a one two sided t test.
+my_t.test(x = my_gapminder$lifeExp,
+          alternative = "two.sided",
+          mu = 60)
+```
+
+This hypothesis test shows us that the difference is not significantly different from 0 with an $\alpha = ..05$ because the p-value is 0.093. This suggests that we do not find significant evidence to reject the null hypothesis that the life expectancy is truly not 60 years. 
+
+## Less Than 
+
+Now I use a t-test to evaluate the alternative hypothesis that the real life expectancy is less than 60. 
+
+Formally: 
+
+$$
+\begin{align}
+& H_o : \mu = 60 \\
+& H_a: \mu < 60
+\end{align}
+$$
+
+```{r}
+# Run a less than t test. .
+my_t.test(x = my_gapminder$lifeExp,
+          alternative = "less",
+          mu = 60)
+```
+
+This example shows that there is significant evidence to reject the null hypothesis that the true life expectancy is equal to 60, using an $\alpha = .05$. Because the p-value is less than the cutoff, we reject the null hypothesis. 
+
+## Greater Than
+
+Now I use a t-test to evaluate the alternative hypothesis that the real life expectancy is greater than 60. 
+
+Formally: 
+
+$$
+\begin{align}
+& H_o : \mu = 60 \\
+& H_a: \mu >60
+\end{align}
+$$
+
+
+```{r}
+# Run a greater than t test. 
+my_t.test(x = my_gapminder$lifeExp,
+          alternative = "greater",
+          mu = 60)
+```
+
+In this test, using a cutoff of $\alpha = .05$ we do not find significant evidence to rejext the null hypothesis that the true life expectancy is 60 years of age. 
+
+# Tutorial for my_lm
+
+In this section I demonstrate how to use `my_lm` on the gapminder data. In this section, I model the outcome variable life expectancy as a linear combination of the predictors GDP per capita and continent. 
+
+```{r}
+# LM. 
+lm_gapminder <- my_lm(lifeExp ~ gdpPercap + continent, 
+      data = my_gapminder)
+
+# Look at coefficients. 
+round(lm_gapminder,7)
+
+
+```
+
+Above, we can see the output for our linear model. For a one unit increase in the GDP per capita, there is a `r round(lm_gapminder[2,1],7)` increase in the life expectancy in a country. This coefficient is significant, according to a t-value of 18 and a p-value that is less than our alpha level of $\alpha = .05$. This means that there is evidence to reject the null hypothesis that the effect of GDP per capita is equal to 0. 
+
+Now, I plot the actual versus fitted plot, for the values. 
+
+```{r, fig.align="center"}
+# Actual versus fitted plot. 
+
+# Create a beta table. 
+beta <- lm_gapminder[,1]
+# Create a matrix with the formula and the data. 
+X <- model.matrix(lifeExp ~ gdpPercap + continent, 
+                  my_gapminder)
+# Construct a table of fits. 
+fitted_table <- X %*% beta
+# Make those data into a frame with the actual and fitted. 
+act_v_fit <- tibble(actual = my_gapminder$lifeExp,
+       fitted = fitted_table[,1])
+# Create a plot. 
+act_v_fit %>% 
+  # ggplot. 
+  ggplot(aes(x = actual, y = fitted)) + 
+  # Geom point. 
+  geom_point() + 
+  # Set theme. 
+  theme_minimal() + 
+  # Fix labs. 
+  labs(x = "Actual",
+       y ="Fitted",
+       title = "Actual versus fitted plot for lm_gapminder")
+
+```
+
+The actual versus fitted plot gives us an idea of how well the model predicts certain values. Here, we can see that as the actual life expectancy value increases there is an overall tight clustering of values on the fitted axis all the way up to 60, which indicates that the model does a good job of predicting these values. However, the model does a less good job predicting the valyes above 60. Here, they begin to diverge with many fitted values that seem uncorrelated with the actual values. This suggests that our model is good at predicting low to middle value life expectancies but not higher life expectancies.
+
+# Tutorial for my_knn_cv 
+
+In this section I present a tutorial for `my_knn_cv` using the palmerpenguins package. This impaments a K-nearest neighbors cross-validation. 
+
+In this example, we predict species, based on `bill_length_mm`, `bill_depth_mm`, `flipper_length_mm`, and `body_mass_g`.
+
+```{r}
+# Data preparation 
+set.seed(1)
+data("my_penguins")
+#======
+# Create training and test data ================
+# Clean the data for NA 
+penguin_knn <- my_penguins %>% na.omit
+# create sample
+# Create a data frame of the input variables 
+penguin_knn <- penguin_knn %>% select(bill_depth_mm,bill_length_mm,
+                  body_mass_g,flipper_length_mm,species) %>% 
+                                                      na.omit
+
+penguin_input_data <- penguin_knn %>% 
+  select(bill_depth_mm,bill_length_mm,
+  body_mass_g,flipper_length_mm) 
+penguin_data_cl <- penguin_knn %>% 
+  select(species)
+
+# Run the model 10 times. 
+# Run k fold cross validation for 5NN. 
+knn_cv_error <- list()
+for (i in 1:10) { 
+  # Iterate through ten tries. 
+knn_cv_error[i] <-  my_knn_cv(penguin_input_data,
+          # Input real class values. 
+          penguin_data_cl,
+          # Select nearest neighbors. 
+          k_nn = i,
+          # Select folds. 
+          k_cv = 5)$cv_err
+}
+
+# Compute training missclassification rate. 
+# Create an empty list. 
+knn_training_error <- list()
+for (i in 1:10) {
+ knn <- my_knn_cv(penguin_input_data,
+          # Input real class values. 
+          penguin_data_cl,
+          # Select nearest neighbors. 
+          k_nn = i,
+          # Select folds. 
+          k_cv = 5)$class
+  # add the training errors. 
+  # Calculate the correctly classified 
+  # Calculate the number of TRUEs
+  num_corr_class = sum(knn == as_vector(penguin_data_cl))
+  # Calculate the correct classification rate 
+  pct_corr_class = num_corr_class / length(knn)
+  # Calculate the missclassification 
+  pct_miss_class = 1-pct_corr_class
+  # Add training missclassification to list. 
+  knn_training_error[i] <- pct_miss_class 
+  }
+
+# Look at the data.
+# Make a tibble. 
+tibble(knn_iteration = 1:10,
+       # Errors. 
+       # CV.
+       cv_error = unlist(knn_cv_error),
+       # Training. 
+       training_error = unlist(knn_training_error)
+       ) %>% 
+  knitr::kable(caption = "Summary of training and testing error accross KNN iterations")
+
+```
+
+Above is a summary table of the training and testing error accross iterations of the numbers of nearest neighbors uses in the algorithm. Each iteration implaments a 5-fold cross validation, where the data is partitioned into 5 pieces and then iterated through, using the ith fold for predicting the species based on the four other folds as training data. The cross validation and training error is then recorded for each iteration. Based on these results, I would choose 1 nearest neighbor because it has the lowest overall cross validation error. Coincidentally, though uninformative, the training error is also the lowest.
+
+# Tutorial for my_rf_cv
+
+In this section I demonstrate a tutorial for `my_rf_cv` which usess the `palmerpenguins` package. In this example, I predict `body_mass_g` based on `bill_length_mm`, `bill_depth_mm`, and `flipper_length_mm`. The number of trees is `100`
+
+```{r, fig.align="center",fig.cap="Boxplots of CV error for 30 simulations accross different values of K", cache = T, fig.width=10,fig.height=8}
+# Compute CV MSE 30 times for different Ks. 
+set.seed(1)
+# Define an empty list
+cv_estimate_mse <- list()
+# Iterate through each K.
+for (i in c(2,5,10)) {
+  # For each K sample 30 times. 
+  for (j in 1:30) {
+  cv_estimate_mse[paste0("mse_",i,"_iter_",j)] <- my_rf_cv(k = i)
+  }
+}
+# Create a data frame of the errors.
+rf_cv_data <- tibble(k_2= unlist(cv_estimate_mse[1:30]),
+       # Unlist each 30 errors and label them k. 
+       k_5 = unlist(cv_estimate_mse[31:60]),
+       k_10 = unlist(cv_estimate_mse[61:90]))
+
+# Boxplot for K = 2
+rf_cv_plot_2 <- rf_cv_data %>% 
+  # Select K leve.
+  ggplot(aes(x = k_2)) + 
+  # Boxplot. 
+  geom_boxplot() + 
+  # Flip the direction of the axes.
+  coord_flip() +
+  # Fix labels.
+  labs(x = "",
+       y = "Estimated RF CV error",
+       title = "Distribution of RF CV_error for K = 2")
+# Boxplot for K = 5.
+rf_cv_plot_5 <- rf_cv_data %>% 
+  ggplot(aes(x = k_5)) + 
+  geom_boxplot() + 
+  coord_flip() + 
+  labs(x = " ",
+       y = "Estimated RF CV error",
+       title = "Distribution of RF CV_error for K = 5")
+# Boxplot for K = 10. 
+rf_cv_plot_10 <-  rf_cv_data %>% 
+  ggplot(aes(x = k_10)) + 
+  geom_boxplot() + 
+  coord_flip() + 
+  labs(x = "",
+       y = "Estimated RF CV error",
+       title = "Distribution of RF CV_error for K = 10")
+ggarrange(rf_cv_plot_2,rf_cv_plot_5,rf_cv_plot_10)
+```
+
+In the above plot, I show the how the distribution of the 30 CV errors varies accross different values of K. 
+
+Below, I create a plot that summarizes these values numerically. 
+
+```{r}
+# Create a table with RF CV values for each K. 
+# Create labels for each K. 
+tibble(K = c(2,5,10),
+       # Calculate the mean for each K. 
+       mean = c(mean(rf_cv_data$k_2),
+                mean(rf_cv_data$k_5),
+                mean(rf_cv_data$k_10)),
+       # Calculate the SD for each K. 
+       sd = c(sd(rf_cv_data$k_2),
+                sd(rf_cv_data$k_5),
+                sd(rf_cv_data$k_10))) %>% 
+  # Label the table. 
+  knitr:: kable(caption = "Summary of CV error for different values of K")
+```
+
+This plot summarizes the mean and standard deviations of each 30 simulations with different numbers of folds in the random forest cross validation. In this case, it is clear that as the number of Ks increases the mean and standard deviation decreases and then increaes. Overall, the optimal cross validation number of folds is 5, because it has the lowest CV mean and the lowest CV SD. I think that the optimal k is 5 beause, if one adds more folds, then the testing set begins to get much smaller, so there is a lot less data to predict on. This results in more error overall -- so finding a balance between folds and number of trees is key. 
+
