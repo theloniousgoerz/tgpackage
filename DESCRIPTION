@@ -8,16 +8,16 @@ Authors@R:
            email = "theloniouslgoerz@gmail.com")
 Description: This package is created for STAT 302, a computing class at UW.
 Depends: 
-    tidyverse,
     class,
     palmerpenguins,
     randomForest,
     gapminder,
+    tidyverse,
     R (>= 2.10)
 Imports: 
+    tibble,
     magrittr,
-    dplyr,
-    ggpubr
+    dplyr
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -27,6 +27,7 @@ Suggests:
     knitr,
     covr,
     testthat (>= 3.0.0),
-    rmarkdown
+    rmarkdown,
+    ggpubr
 Config/testthat/edition: 3
 VignetteBuilder: knitr
