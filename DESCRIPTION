@@ -17,7 +17,8 @@ Depends:
 Imports: 
     tibble,
     magrittr,
-    dplyr
+    dplyr,
+    kableExtra
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

@@ -27,7 +27,6 @@ devtools::install_github("theloniousgoerz/tgpackage")
 
 ```{r setup}
 library(tgpackage)
-library(tidyverse)
 library(ggpubr)
 options(scipen = 500)
 ```
